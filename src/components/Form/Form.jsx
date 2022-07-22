@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import {
   ErrorText,
@@ -10,7 +10,12 @@ import {
 } from './Form.styled';
 import * as Yup from 'yup';
 import 'yup-phone';
+import { nanoid } from 'nanoid';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from '../../redux/items/itemsSlice';
+
+import { getItems } from 'redux/contacts-selectors';
 
 const initialValues = {
   name: '',
@@ -37,11 +42,33 @@ const FormContactStyled = styled(Form)`
 const FieldContactStyled = styled(Field)`
   ${StyledField}
 `;
-export const ContactForm = ({ addContact }) => {
-  const handleSubmit = (values, { resetForm }) => {
-    addContact(values);
+
+export const ContactForm = () => {
+  const items = useSelector(getItems);
+  const dispatch = useDispatch();
+
+  const isContactInList = contact => {
+    return !!items.find(
+      c => c.name.toLowerCase() === contact.name.toLowerCase()
+    );
+  };
+
+  const handleSubmit = ({ name, number }, { resetForm }) => {
+    let id = nanoid();
+    let contact = {
+      id,
+      name,
+      number,
+    };
+    if (isContactInList(contact)) {
+      alert(`${name} is already in contacts!`);
+      return;
+    }
+
+    dispatch(addContact(contact));
     resetForm();
   };
+
   return (
     <Formik
       initialValues={initialValues}
@@ -70,6 +97,6 @@ export const ContactForm = ({ addContact }) => {
   );
 };
 
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
-};
+// ContactForm.propTypes = {
+//   addContact: PropTypes.func.isRequired,
+// };
