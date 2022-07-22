@@ -3,7 +3,7 @@ import React from 'react';
 import { ContactItem, ContactList, ButtonDelete } from './Contacts.styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteContact } from '../../redux/items/itemsSlice';
-import { getfilterContacts, getItems } from 'redux/contacts-selectors';
+import { getfilterContacts } from 'redux/contacts-selectors';
 
 function Contacts() {
   const dispatch = useDispatch();
