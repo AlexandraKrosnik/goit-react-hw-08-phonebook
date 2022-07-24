@@ -1,8 +1,4 @@
-import {
-  configureStore,
-  combineReducers,
-  getDefaultMiddleware,
-} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import {
@@ -18,10 +14,10 @@ import {
 import filterReducer from './filter/filterSlice';
 import { contactsApi } from './contacts/contactsApi';
 
-const rootReducer = combineReducers({
-  [contactsApi.reducerPath]: contactsApi.reducer,
-  filter: filterReducer,
-});
+// const rootReducer = combineReducers({
+//   [contactsApi.reducerPath]: contactsApi.reducer,
+//   filter: filterReducer,
+// });
 
 export const store = configureStore({
   reducer: {
