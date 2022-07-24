@@ -3,12 +3,13 @@ import Contacts from './Contacts/Contacts';
 
 import { Section, Title } from './App.styled';
 import Filter from './Filter/Filter';
-import { getfilterContacts, getItems } from 'redux/contacts-selectors';
+import { getfilterContacts } from 'redux/contacts-selectors';
 import { useSelector } from 'react-redux';
+import { useFetchContactsQuery } from 'redux/contacts/contactsApi';
 
 export const App = () => {
-  const contacts = useSelector(getItems);
-  const filterContacts = useSelector(getfilterContacts);
+  const { data: contacts } = useFetchContactsQuery();
+  const filterContacts = useSelector(getfilterContacts)(contacts);
 
   return (
     <>
@@ -19,13 +20,13 @@ export const App = () => {
       <Section>
         <Title>Contacts</Title>
         <Filter />
-        {filterContacts.length === 0 ? (
+        {!!filterContacts && filterContacts.length === 0 ? (
           <p>
             There is no contact
             {!!contacts.length ? ' with this name' : ''}!
           </p>
         ) : (
-          <Contacts />
+          !!filterContacts && <Contacts contacts={filterContacts} />
         )}
       </Section>
     </>

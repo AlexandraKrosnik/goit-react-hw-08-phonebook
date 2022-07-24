@@ -10,21 +10,23 @@ import {
 } from './Form.styled';
 import * as Yup from 'yup';
 import 'yup-phone';
-import { nanoid } from 'nanoid';
+import toast, { Toaster } from 'react-hot-toast';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/items/itemsSlice';
-
-import { getItems } from 'redux/contacts-selectors';
+import {
+  useCreateContactsMutation,
+  useFetchContactsQuery,
+} from 'redux/contacts/contactsApi';
 
 const initialValues = {
   name: '',
-  number: '',
+  phone: '',
 };
 
 const validationSchema = Yup.object({
   name: Yup.string().required(),
-  number: Yup.string().phone().required(),
+  phone: Yup.string()
+    .phone('UA', 'Please enter a valid phone number')
+    .required(),
 });
 
 const FormError = ({ name }) => {
@@ -44,56 +46,71 @@ const FieldContactStyled = styled(Field)`
 `;
 
 export const ContactForm = () => {
-  const items = useSelector(getItems);
-  const dispatch = useDispatch();
+  const { data } = useFetchContactsQuery();
+  const [createContacts] = useCreateContactsMutation();
 
-  const isContactInList = contact => {
-    return !!items.find(
-      c => c.name.toLowerCase() === contact.name.toLowerCase()
-    );
+  const isContactInList = name => {
+    return !!data.find(c => c.name.toLowerCase() === name.toLowerCase());
   };
 
-  const handleSubmit = ({ name, number }, { resetForm }) => {
-    let id = nanoid();
+  const handleSubmit = async ({ name, phone }, { resetForm }) => {
     let contact = {
-      id,
       name,
-      number,
+      phone,
     };
-    if (isContactInList(contact)) {
-      alert(`${name} is already in contacts!`);
+    if (isContactInList(name)) {
+      toast.error(`${name} is already in contacts!`, {
+        position: 'top-right',
+      });
+
       return;
     }
+    try {
+      await createContacts(contact);
+      toast.success(`Contact with name: ${name} created!`, {
+        position: 'top-right',
+      });
+    } catch (error) {
+      toast.error(`Error`, {
+        position: 'top-right',
+      });
+    }
 
-    dispatch(addContact(contact));
     resetForm();
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      validationSchema={validationSchema}
-    >
-      <FormContactStyled autoComplete="off">
-        <FormSection>
-          <label htmlFor="name">Full name</label>
-          <FieldContactStyled name="name" type="text" placeholder="Full name" />
-          <FormError name="name" />
-        </FormSection>
-        <FormSection>
-          <label htmlFor="number">Number</label>
-          <FieldContactStyled
-            name="number"
-            type="tel"
-            placeholder="+____________"
-          />
-          <FormError name="number" />
-        </FormSection>
+    <>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        <FormContactStyled autoComplete="off">
+          <FormSection>
+            <label htmlFor="name">Full name</label>
+            <FieldContactStyled
+              name="name"
+              type="text"
+              placeholder="Full name"
+            />
+            <FormError name="name" />
+          </FormSection>
+          <FormSection>
+            <label htmlFor="phone">Number</label>
+            <FieldContactStyled
+              name="phone"
+              type="tel"
+              placeholder="000-000-0000"
+            />
+            <FormError name="phone" />
+          </FormSection>
 
-        <ButtonStyled type="submit">Add</ButtonStyled>
-      </FormContactStyled>
-    </Formik>
+          <ButtonStyled type="submit">Add</ButtonStyled>
+        </FormContactStyled>
+      </Formik>
+      <Toaster />
+    </>
   );
 };
 
