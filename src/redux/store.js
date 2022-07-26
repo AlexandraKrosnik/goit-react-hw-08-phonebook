@@ -3,6 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 
 import {
   persistStore,
+  persistReducer,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -10,9 +11,17 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 import filterReducer from './filter/filterSlice';
-import { contactsApi } from './contacts/contactsApi';
+
+import { authReducer } from './auth';
+import { contactsReducer } from './contacts';
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['token'],
+};
 
 // const rootReducer = combineReducers({
 //   [contactsApi.reducerPath]: contactsApi.reducer,
@@ -21,7 +30,9 @@ import { contactsApi } from './contacts/contactsApi';
 
 export const store = configureStore({
   reducer: {
-    [contactsApi.reducerPath]: contactsApi.reducer,
+    auth: persistReducer(authPersistConfig, authReducer),
+    contacts: contactsReducer,
+
     filter: filterReducer,
   },
   middleware: getDefaultMiddleware => [
@@ -30,7 +41,6 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-    contactsApi.middleware,
   ],
 
   devTools: process.env.NODE_ENV !== 'production',

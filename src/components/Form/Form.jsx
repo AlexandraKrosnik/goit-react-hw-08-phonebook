@@ -12,19 +12,17 @@ import * as Yup from 'yup';
 import 'yup-phone';
 import toast, { Toaster } from 'react-hot-toast';
 import styled from 'styled-components';
-import {
-  useCreateContactsMutation,
-  useFetchContactsQuery,
-} from 'redux/contacts/contactsApi';
+import { getContacts, contactsOperations } from '../../redux/contacts/index';
+import { useDispatch, useSelector } from 'react-redux';
 
 const initialValues = {
   name: '',
-  phone: '',
+  number: '',
 };
 
 const validationSchema = Yup.object({
   name: Yup.string().required(),
-  phone: Yup.string()
+  number: Yup.string()
     .phone('UA', 'Please enter a valid phone number')
     .required(),
 });
@@ -46,17 +44,18 @@ const FieldContactStyled = styled(Field)`
 `;
 
 export const ContactForm = () => {
-  const { data } = useFetchContactsQuery();
-  const [createContacts] = useCreateContactsMutation();
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+  // const [createContacts] = useCreateContactsMutation();
 
   const isContactInList = name => {
-    return !!data.find(c => c.name.toLowerCase() === name.toLowerCase());
+    return !!contacts.find(c => c.name.toLowerCase() === name.toLowerCase());
   };
 
-  const handleSubmit = async ({ name, phone }, { resetForm }) => {
+  const handleSubmit = async ({ name, number }, { resetForm }) => {
     let contact = {
       name,
-      phone,
+      number,
     };
     if (isContactInList(name)) {
       toast.error(`${name} is already in contacts!`, {
@@ -66,7 +65,7 @@ export const ContactForm = () => {
       return;
     }
     try {
-      await createContacts(contact);
+      dispatch(contactsOperations.createContact(contact));
       toast.success(`Contact with name: ${name} created!`, {
         position: 'top-right',
       });
@@ -97,13 +96,13 @@ export const ContactForm = () => {
             <FormError name="name" />
           </FormSection>
           <FormSection>
-            <label htmlFor="phone">Number</label>
+            <label htmlFor="number">Number</label>
             <FieldContactStyled
-              name="phone"
+              name="number"
               type="tel"
               placeholder="000-000-0000"
             />
-            <FormError name="phone" />
+            <FormError name="number" />
           </FormSection>
 
           <ButtonStyled type="submit">Add</ButtonStyled>

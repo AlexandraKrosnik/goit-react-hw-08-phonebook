@@ -9,8 +9,8 @@ function Contacts({ contacts }) {
     <>
       <ContactList>
         {!!contacts &&
-          contacts.map(({ id, name, phone }) => {
-            return <ContactItem key={id} id={id} name={name} phone={phone} />;
+          contacts.map(({ id, name, number }) => {
+            return <ContactItem key={id} id={id} name={name} number={number} />;
           })}
       </ContactList>
     </>
@@ -21,7 +21,7 @@ Contacts.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      phone: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
     })
   ).isRequired,
 };

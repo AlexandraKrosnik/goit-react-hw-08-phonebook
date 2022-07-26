@@ -1,17 +1,20 @@
-import { useDeleteContactsMutation } from 'redux/contacts/contactsApi';
 import { Item, ButtonDelete } from './ContactItem.styled';
 import toast from 'react-hot-toast';
-export const ContactItem = ({ id, name, phone }) => {
-  const [deleteContact, { isLoading }] = useDeleteContactsMutation();
+import { useDispatch } from 'react-redux';
+import { contactsOperations } from 'redux/contacts';
+export const ContactItem = ({ id, name, number }) => {
+  const dispatch = useDispatch();
+  // const [deleteContact, { isLoading }] = useDeleteContactsMutation();
+
   return (
     <Item>
-      {name}: {phone}
+      {name}: {number}
       <ButtonDelete
         type="button"
         name={id}
         onClick={async () => {
           try {
-            await deleteContact(id);
+            dispatch(contactsOperations.deleteContact(id));
             toast.success('Contact deleted successfully!', {
               position: 'top-right',
             });
@@ -22,7 +25,8 @@ export const ContactItem = ({ id, name, phone }) => {
           }
         }}
       >
-        {isLoading ? 'Deleting...' : 'Delete'}
+        Delete
+        {/* {isLoading ? 'Deleting...' : 'Delete'} */}
       </ButtonDelete>
     </Item>
   );

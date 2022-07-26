@@ -1,7 +1,7 @@
 export const getFilter = state => state.filter;
 export const getContacts = state => state.contacts;
 
-export const getfilterContacts = state => {
+export const getFilterContacts = state => {
   const filter = getFilter(state);
   const contacts = getContacts(state);
   if (filter.length === 0 || !contacts) {
