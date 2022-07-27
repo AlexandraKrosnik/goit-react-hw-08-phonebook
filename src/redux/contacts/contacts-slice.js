@@ -18,7 +18,7 @@ const contactsSlice = createSlice({
       console.log(action.payload);
       return state.filter(item => item.id !== action.payload);
     },
-    [authOperations.logOut.fulfilled](state, action) {
+    [authOperations.logOut.fulfilled]() {
       return [];
     },
   },
