@@ -13,7 +13,7 @@ export const Layout = () => {
           {isLoggedIn ? (
             <>
               <MenuItem>
-                <Link to="/contact">Контакти</Link>
+                <Link to="/contacts">Контакти</Link>
               </MenuItem>
               <MenuItem>
                 <UserMenu />

@@ -8,7 +8,7 @@ export const ErrorText = styled.p`
 
 export const StyledForm = css`
   box-sizing: border-box;
-  width: 350px;
+  width: 30%;
   display: flex;
   flex-direction: column;
   padding: 5px;
@@ -17,7 +17,7 @@ export const StyledForm = css`
 
 export const StyledField = css`
   box-sizing: border-box;
-  width: 50%;
+  width: 90%;
   padding: 10px;
 
   border: 3px solid #ccc;

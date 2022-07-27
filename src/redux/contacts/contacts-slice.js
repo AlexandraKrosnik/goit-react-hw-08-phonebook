@@ -15,7 +15,6 @@ const contactsSlice = createSlice({
       return action.payload;
     },
     [contactOperations.deleteContact.fulfilled](state, action) {
-      console.log(action.payload);
       return state.filter(item => item.id !== action.payload);
     },
     [authOperations.logOut.fulfilled]() {

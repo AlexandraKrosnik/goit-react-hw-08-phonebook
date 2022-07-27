@@ -7,11 +7,9 @@ import { getFilterContacts } from 'redux/contacts';
 import { useSelector, useDispatch } from 'react-redux';
 import { contactsOperations } from 'redux/contacts';
 import { useEffect } from 'react';
-import { useFirstMountState } from 'react-use';
 
-export const ContactPage = () => {
+export default function ContactPage() {
   const dispatch = useDispatch();
-  const isFirstMount = useFirstMountState();
 
   useEffect(() => {
     dispatch(contactsOperations.fetchContacts());
@@ -39,4 +37,4 @@ export const ContactPage = () => {
       </Section>
     </>
   );
-};
+}

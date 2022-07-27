@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import {
   ErrorText,
@@ -10,10 +9,10 @@ import {
 } from './Form.styled';
 import * as Yup from 'yup';
 import 'yup-phone';
-import toast, { Toaster } from 'react-hot-toast';
 import styled from 'styled-components';
-import { getContacts, contactsOperations } from '../../redux/contacts/index';
+import { getContacts, contactsOperations } from 'redux/contacts/index';
 import { useDispatch, useSelector } from 'react-redux';
+import openNotificationWithIcon from 'components/Notification';
 
 const initialValues = {
   name: '',
@@ -46,7 +45,6 @@ const FieldContactStyled = styled(Field)`
 export const ContactForm = () => {
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
-  // const [createContacts] = useCreateContactsMutation();
 
   const isContactInList = name => {
     return !!contacts.find(c => c.name.toLowerCase() === name.toLowerCase());
@@ -58,21 +56,17 @@ export const ContactForm = () => {
       number,
     };
     if (isContactInList(name)) {
-      toast.error(`${name} is already in contacts!`, {
-        position: 'top-right',
-      });
-
+      openNotificationWithIcon('warning', `${name} is already in contacts!`);
       return;
     }
     try {
       dispatch(contactsOperations.createContact(contact));
-      toast.success(`Contact with name: ${name} created!`, {
-        position: 'top-right',
-      });
+      openNotificationWithIcon(
+        'success',
+        `Contact with name: ${name} created!`
+      );
     } catch (error) {
-      toast.error(`Error`, {
-        position: 'top-right',
-      });
+      openNotificationWithIcon('error', 'Error');
     }
 
     resetForm();
@@ -108,11 +102,6 @@ export const ContactForm = () => {
           <ButtonStyled type="submit">Add</ButtonStyled>
         </FormContactStyled>
       </Formik>
-      <Toaster />
     </>
   );
 };
-
-// ContactForm.propTypes = {
-//   addContact: PropTypes.func.isRequired,
-// };

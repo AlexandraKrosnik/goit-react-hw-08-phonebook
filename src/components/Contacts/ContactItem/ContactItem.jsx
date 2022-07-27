@@ -1,33 +1,33 @@
-import { Item, ButtonDelete } from './ContactItem.styled';
-import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { contactsOperations } from 'redux/contacts';
-export const ContactItem = ({ id, name, number }) => {
+import PropTypes from 'prop-types';
+import { Avatar, List, Tooltip, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+export const ContactItem = ({ contact }) => {
   const dispatch = useDispatch();
-  // const [deleteContact, { isLoading }] = useDeleteContactsMutation();
 
+  const { id, name, number } = contact;
   return (
-    <Item>
-      {name}: {number}
-      <ButtonDelete
-        type="button"
-        name={id}
-        onClick={async () => {
-          try {
-            dispatch(contactsOperations.deleteContact(id));
-            toast.success('Contact deleted successfully!', {
-              position: 'top-right',
-            });
-          } catch (error) {
-            toast.error('Сontact cannot be deleted!', {
-              position: 'top-right',
-            });
-          }
-        }}
-      >
-        Delete
-        {/* {isLoading ? 'Deleting...' : 'Delete'} */}
-      </ButtonDelete>
-    </Item>
+    <List.Item>
+      <List.Item.Meta
+        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+        title={<a href="https://ant.design">{name}</a>}
+        description={number}
+      />
+      <Tooltip title="search">
+        <Button
+          shape="circle"
+          icon={<DeleteOutlined />}
+          onClick={() => dispatch(contactsOperations.deleteContact(id))}
+        />
+      </Tooltip>
+    </List.Item>
   );
+};
+ContactItem.propTypes = {
+  contact: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    number: PropTypes.string.isRequired,
+  }).isRequired,
 };

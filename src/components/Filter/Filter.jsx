@@ -3,7 +3,7 @@ import React from 'react';
 import { InputStyled, Title } from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeFilter } from 'redux/filter/filterSlice';
-import { getFilter } from 'redux/contacts-selectors';
+import { getFilter } from 'redux/contacts/contacts-selectors';
 
 export default function Filter() {
   const dispatch = useDispatch();

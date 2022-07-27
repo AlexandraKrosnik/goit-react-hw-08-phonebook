@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-export const ContactList = styled.ul`
+export const ContactList = styled.div`
   box-sizing: border-box;
   padding: 0;
-  padding-left: 20px;
+  width: 45%;
 `;
