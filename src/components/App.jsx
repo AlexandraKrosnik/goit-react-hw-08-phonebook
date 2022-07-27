@@ -22,6 +22,7 @@ export const App = () => {
     !isFetchingUser && (
       <Routes>
         <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to="/login" />} />
           <Route
             path="login"
             element={
