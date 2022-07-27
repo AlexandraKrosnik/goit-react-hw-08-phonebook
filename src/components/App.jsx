@@ -1,7 +1,7 @@
 import ContactPage from 'pages/ContactPage';
 import LoginPage from 'pages/LoginPage';
 import RegisterPage from 'pages/RegisterPage';
-import { useEffect, lazy } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { authOperations, getFetchingCurrent } from 'redux/auth';
