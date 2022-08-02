@@ -17,7 +17,6 @@ const register = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const { data } = await axios.post('/users/signup', credentials);
-
       token.set(data.token);
       return data;
     } catch (error) {
@@ -32,11 +31,11 @@ const logIn = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const { data } = await axios.post('/users/login', credentials);
-
       token.set(data.token);
       return data;
     } catch (error) {
       rejectWithValue(error);
+      openNotificationWithIcon('error', 'Сheck the entered data!');
     }
   }
 );
